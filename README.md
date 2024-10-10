@@ -17,25 +17,44 @@ If you encounter problems with your node, please open a [GitHub issue](https://g
 
 ### Usage
 
-1. Ensure you have an Ethereum L1 full node RPC available, and set `OP_NODE_L1_ETH_RPC` & `OP_NODE_L1_BEACON` (in the `.env.sepolia` file). If running your own L1 node, it needs to be synced before Unichain will be able to fully sync.
-2. Run:
+1. Clone unichain-node repository
+```
+git clone https://github.com/Uniswap/unichain-node
+```
+2. Naviguate to unichain-node directory
+```
+cd unichain-node
+```
+3. Ensure you have an Ethereum L1 full node RPC available, and set `OP_NODE_L1_ETH_RPC` & `OP_NODE_L1_BEACON` (in the `.env.sepolia` file). If running your own L1 node, it needs to be synced before Unichain will be able to fully sync.
+```
+nano .env.sepolia
+```
+Use CTRL+X to save your modifications
+4. Run:
 
 ```
 docker compose up -d
 ```
 
-3. You should now be able to `curl` your Unichain node:
+5. You should now be able to `curl` your Unichain node:
 
 ```
 curl -d '{"id":1,"jsonrpc":"2.0","method":"eth_getBlockByNumber","params":["latest",false]}' \
   -H "Content-Type: application/json" http://localhost:8545
 ```
 
-4. To stop your node, run:
+6. To stop your node, run:
 ```
 docker compose down
 ```
-
+7. Check unichain-node-op-node-1 logs
+```
+docker logs unichain-node-op-node-1
+```
+8. Check logs of unichain-node-execution-client-1
+```
+docker logs unichain-node-execution-client-1
+```
 #### Persisting Data
 
 By default, the data directory is stored in `${PROJECT_ROOT}/geth-data`. You can override this by modifying the value of
