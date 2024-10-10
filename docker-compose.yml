@@ -1,0 +1,46 @@
+volumes:
+  shared:
+
+services:
+  execution-client:
+    image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-geth:v1.101408.0
+    env_file:
+      - .env
+      - .env.sepolia
+    ports:
+      - 30303:30303/udp
+      - 30303:30303/tcp
+      - 8545:8545/tcp
+      - 8546:8546/tcp
+    volumes:
+      - ${HOST_DATA_DIR}:/data
+      - shared:/shared
+      - ./chainconfig:/chainconfig
+      - ./op-geth-entrypoint.sh:/entrypoint.sh
+    healthcheck:
+      start_interval: 5s
+      start_period: 240s
+      test: wget --no-verbose --tries=1 --spider http://localhost:8545 || exit 1
+    restart: always
+    entrypoint: /entrypoint.sh
+
+  op-node:
+    image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-node:v1.9.1
+    env_file:
+      - .env
+      - .env.sepolia
+    ports:
+      - 9222:9222/udp
+      - 9222:9222/tcp
+      - 9545:9545/tcp
+    volumes:
+      - shared:/shared
+      - ./chainconfig:/chainconfig
+    healthcheck:
+      start_interval: 5s
+      start_period: 240s
+      test: wget --no-verbose --tries=1 --spider http://localhost:9545 || exit 1
+    depends_on:
+      execution-client:
+        condition: service_healthy
+    restart: always
