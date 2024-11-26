@@ -3,7 +3,7 @@ volumes:
 
 services:
   execution-client:
-    image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-geth:v1.101408.0
+    image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-geth:v1.101411.3
     env_file:
       - .env
       - .env.sepolia
@@ -25,7 +25,7 @@ services:
     entrypoint: /entrypoint.sh
 
   op-node:
-    image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-node:v1.9.1
+    image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-node:v1.10.1
     env_file:
       - .env
       - .env.sepolia

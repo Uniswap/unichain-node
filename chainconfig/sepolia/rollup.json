@@ -28,6 +28,7 @@
   "ecotone_time": 0,
   "fjord_time": 0,
   "granite_time": 0,
+  "holocene_time": 1734559200,
   "batch_inbox_address": "0xff00000000000000000000000000000000001301",
   "deposit_contract_address": "0x0d83dab629f0e0f9d36c0cbc89b69a489f0751bd",
   "l1_system_config_address": "0xaee94b9ab7752d3f7704bde212c0c6a0b701571d",
