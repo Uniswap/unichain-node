@@ -27,7 +27,7 @@ services:
     entrypoint: /entrypoint.sh
 
   op-node:
-    image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-node:v1.11.0
+    image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-node:v1.11.1-rc.1
     env_file:
       - .env
       # select your network here:
