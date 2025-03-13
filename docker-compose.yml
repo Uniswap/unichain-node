@@ -3,7 +3,7 @@ volumes:
 
 services:
   execution-client:
-    image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-geth:v1.101500.0
+    image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-geth:v1.101503.0
     env_file:
       - .env
       # select your network here:
@@ -27,7 +27,7 @@ services:
     entrypoint: /entrypoint.sh
 
   op-node:
-    image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-node:v1.11.1-rc.1
+    image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-node:v1.12.0
     env_file:
       - .env
       # select your network here:
