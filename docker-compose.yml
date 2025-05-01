@@ -17,7 +17,6 @@ services:
     volumes:
       - ${HOST_DATA_DIR}:/data
       - shared:/shared
-      - ./chainconfig:/chainconfig
       - ./op-geth-entrypoint.sh:/entrypoint.sh
     healthcheck:
       start_interval: 5s
@@ -40,7 +39,6 @@ services:
     volumes:
       - ${HOST_NODE_DATA_DIR}:/data
       - shared:/shared
-      - ./chainconfig:/chainconfig
     healthcheck:
       start_interval: 5s
       start_period: 240s
