@@ -18,7 +18,20 @@ If you encounter problems with your node, please open a [GitHub issue](https://g
 
 ### Usage
 
-1. Ensure you have an Ethereum L1 full node RPC available, and set `OP_NODE_L1_ETH_RPC` & `OP_NODE_L1_BEACON` (in the `.env.mainnet` file). If running your own L1 node, it needs to be synced before Unichain will be able to fully sync.
+1. Ensure you have an Ethereum L1 full node RPC available, and set `OP_NODE_L1_ETH_RPC` & `OP_NODE_L1_BEACON` (in the `.env.mainnet` file).
+
+   If running your own L1 node:
+   
+   - It needs to be synced before Unichain will be able to fully sync.
+
+   - Use Docker host gateway IP as containers cannot access host services via `localhost` or `127.0.0.1`.
+     ```
+     OP_NODE_L1_ETH_RPC=http://172.17.0.1:8545
+     OP_NODE_L1_BEACON=http://172.17.0.1:3500
+     ```
+   
+   - Your L1 node needs to allow connections from Docker containers.
+
 2. Select your network in the docker compose file by uncommenting .env.sepolia or .env.mainnet in both op-node and the execution client.
 3. Run:
 
