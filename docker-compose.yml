@@ -1,5 +1,7 @@
 volumes:
   shared:
+  prometheus_data:
+  grafana_data:
 
 services:
   execution-client:
@@ -14,6 +16,7 @@ services:
       - 30303:30303/tcp
       - 8545:8545/tcp
       - 8546:8546/tcp
+      - 6060:6060/tcp
     volumes:
       - ${HOST_DATA_DIR}:/data
       - shared:/shared
@@ -36,6 +39,7 @@ services:
       - 9222:9222/udp
       - 9222:9222/tcp
       - 9545:9545/tcp
+      - 7300:7300/tcp
     volumes:
       - ${HOST_NODE_DATA_DIR}:/data
       - shared:/shared
@@ -46,4 +50,35 @@ services:
     depends_on:
       execution-client:
         condition: service_healthy
+    restart: always
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - 9090:9090/tcp
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--storage.tsdb.retention.time=15d"
+      - "--web.enable-lifecycle"
+    restart: always
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - 3000:3000/tcp
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH=/var/lib/grafana/dashboards/op-node-overview.json
+    depends_on:
+      - prometheus
     restart: always

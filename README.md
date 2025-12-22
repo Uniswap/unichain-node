@@ -55,3 +55,45 @@ docker compose down
 
 By default, the data directory is stored in `${PROJECT_ROOT}/geth-data`. You can override this by modifying the value of
 `HOST_DATA_DIR` variable in the [`.env`](./.env) file.
+
+### Monitoring
+
+The node includes built-in monitoring with Prometheus and Grafana.
+
+#### Accessing Grafana
+
+1. Open http://localhost:3000 in your browser
+2. Login with default credentials:
+   - Username: `admin`
+   - Password: `admin`
+3. Navigate to **Dashboards** to view:
+   - **op-geth Overview** - Execution client metrics
+   - **op-node Overview** - L2 rollup consensus metrics
+
+#### Available Metrics
+
+**op-geth Dashboard:**
+- Chain head progress (block, header, receipt)
+- Block import rate
+- Transaction pool (pending, queued, local)
+- P2P network (peers, bandwidth)
+- System resources (CPU, memory, disk I/O)
+- RPC request rates and latency
+
+**op-node Dashboard:**
+- **Node Status** - Up/down, derivation idle, sequencer active
+- **Block Derivation** - L1/L2 block refs (unsafe, safe, finalized), derivation rate
+- **Unsafe Payloads** - Buffer length, memory size, channel bank events
+- **Sequencer** - Building/sealing jobs rate, latency histograms, transactions sequenced
+- **Errors & Resets** - Pipeline/sequencer resets, derivation/sequencing/publishing errors, L1 reorg depth
+- **P2P Network** - Peers, streams, bandwidth, gossip events, dial/accept, unbans, quarantine
+- **L1 RPC** - Request latency by method
+- **Go Runtime** - Memory, goroutines, GC duration
+
+
+#### Prometheus
+
+Raw metrics are available at:
+- Prometheus UI: http://localhost:9090
+- op-geth metrics: http://localhost:6060/debug/metrics/prometheus
+- op-node metrics: http://localhost:7300/metrics
