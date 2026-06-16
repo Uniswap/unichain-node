@@ -3,7 +3,7 @@ volumes:
 
 services:
   execution-client:
-    image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-reth:v2.1.0-rc.1
+    image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-reth:v2.3.1
     env_file:
       - .env
       # select your network here:
@@ -18,15 +18,15 @@ services:
       - ${HOST_DATA_DIR}:/data
       - shared:/shared
       - ./op-reth-entrypoint.sh:/entrypoint.sh
-    healthcheck:
-      start_interval: 5s
-      start_period: 240s
-      test: bash -c 'echo > /dev/tcp/localhost/8545'
+    # healthcheck:
+    #   start_interval: 5s
+    #   start_period: 240s
+    #   test: bash -c 'echo > /dev/tcp/localhost/8545'
     restart: always
     entrypoint: /entrypoint.sh
 
   op-node:
-    image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-node:latest
+    image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-node:v1.19.0
     env_file:
       - .env
       # select your network here:
@@ -39,10 +39,10 @@ services:
     volumes:
       - ${HOST_NODE_DATA_DIR}:/data
       - shared:/shared
-    healthcheck:
-      start_interval: 5s
-      start_period: 240s
-      test: wget --no-verbose --tries=1 --spider http://localhost:9545 || exit 1
+    # healthcheck:
+    #   start_interval: 5s
+    #   start_period: 240s
+    #   test: bash -c 'echo > /dev/tcp/localhost/9545'
     depends_on:
       execution-client:
         condition: service_healthy
