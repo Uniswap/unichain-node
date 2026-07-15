@@ -3,12 +3,12 @@ volumes:
 
 services:
   execution-client:
-    image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-reth:v2.3.1
+    image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-reth:v2.3.3
     env_file:
       - .env
       # select your network here:
-#      - .env.sepolia
-#      - .env.mainnet
+      #- .env.sepolia
+      #- .env.mainnet
     ports:
       - 8545:8545/tcp
       - 8546:8546/tcp
@@ -18,20 +18,21 @@ services:
       - ${HOST_DATA_DIR}:/data
       - shared:/shared
       - ./op-reth-entrypoint.sh:/entrypoint.sh
-    # healthcheck:
-    #   start_interval: 5s
-    #   start_period: 240s
-    #   test: bash -c 'echo > /dev/tcp/localhost/8545'
+    healthcheck:
+      start_interval: 5s
+      start_period: 240s
+      # the op-reth image only ships busybox (no bash/wget/curl/nc)
+      test: netstat -tln | grep -q :8545
     restart: always
     entrypoint: /entrypoint.sh
 
   op-node:
-    image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-node:v1.19.0
+    image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-node:v1.19.2
     env_file:
       - .env
       # select your network here:
-#      - .env.sepolia
-#      - .env.mainnet
+      #- .env.sepolia
+      #- .env.mainnet
     ports:
       - 9222:9222/udp
       - 9222:9222/tcp
@@ -39,11 +40,23 @@ services:
     volumes:
       - ${HOST_NODE_DATA_DIR}:/data
       - shared:/shared
-    # healthcheck:
-    #   start_interval: 5s
-    #   start_period: 240s
-    #   test: bash -c 'echo > /dev/tcp/localhost/9545'
+    healthcheck:
+      start_interval: 5s
+      start_period: 240s
+      # the op-node image is distroless (no shell or network tools), so this uses
+      # the static busybox that healthcheck-init copies into the shared volume
+      test: ["CMD", "/shared/busybox", "nc", "-z", "localhost", "9545"]
     depends_on:
       execution-client:
         condition: service_healthy
+      healthcheck-init:
+        condition: service_completed_successfully
     restart: always
+
+  # provides a statically-linked busybox for the op-node healthcheck
+  healthcheck-init:
+    image: busybox:stable-musl
+    volumes:
+      - shared:/shared
+    command: cp /bin/busybox /shared/busybox
+    restart: "no"
