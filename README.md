@@ -15,6 +15,15 @@ If you encounter problems with your node, please open a [GitHub issue](https://g
 | Mainnet | ✅     |
 | Testnet (Sepolia) | ✅     |
 
+### Prerequisites
+
+Before starting, ensure you have the following installed:
+
+- **Docker**: If you haven't installed Docker yet, follow the [Docker installation guide](https://docs.docker.com/get-docker/).
+
+- **Docker Compose**: Docker Compose is required for running the services. Follow the [Docker Compose installation guide](https://docs.docker.com/compose/install/).
+
+- **Ethereum L1 full node RPC**: You need access to an Ethereum Layer 1 full node, either by running your own or using a service like [Infura](https://infura.io/) or [Alchemy](https://www.alchemy.com/).
 
 ### Usage
 
